@@ -1,4 +1,4 @@
-/* chrysalis-hardware-dygma-raise -- Chrysalis support for Dygma Raise
+/* chrysalis-hardware-dygma-raise-iso -- Chrysalis support for Dygma Raise
  * Copyright (C) 2018-2019  Keyboardio, Inc.
  *
  * This program is free software: you can redistribute it and/or modify it under

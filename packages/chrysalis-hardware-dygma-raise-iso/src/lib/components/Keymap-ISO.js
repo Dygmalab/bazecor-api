@@ -1,5 +1,5 @@
 // -*- mode: js-jsx -*-
-/* chrysalis-hardware-dygma-raise -- Chrysalis support for Dygma Raise
+/* chrysalis-hardware-dygma-raise-iso -- Chrysalis support for Dygma Raise
  * Copyright (C) 2018  Keyboardio, Inc.
  * Copyright (C) 2018  Simon-Claudius Wystrach
  *
