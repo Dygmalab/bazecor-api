@@ -32,26 +32,33 @@ class Focus {
         return instance
     }
 
+    /**
+    * Get current keyboard type (ansi or iso) for Raise
+    * @param {class} focus this
+    * @param {object} device Raise_ANSI or Raise_ISO from chrysalis-api
+    * @param {object} port Parametersof current port from SerialPort.list() method
+    * @returns {string} keyboard type in uppercase (ANSI or ISO)
+    */
     async getCurrentkeyboardType(focus, device, port) {
-        let typeKeyboard;
+        let type;
         let openPortPath, openPortDevice;
         const anotherPortIsOpen =
-          focus._port && focus._port.isOpen && focus._port.path !== port.comName;
+        focus._port && focus._port.isOpen && focus._port.path !== port.comName;
         const currentPortIsOpen =
-          focus._port && focus._port.isOpen && focus._port.path === port.comName;
-     
-        if (focus._port && focus._port.isOpen) {
-          openPortPath = focus._port.path;
-          openPortDevice = this.device;
-        }
-        if (anotherPortIsOpen) focus.close();
-        if (anotherPortIsOpen && !currentPortIsOpen)
-          await focus.open(port.comName, device);
-        typeKeyboard = await focus.getKeyboardType();
-        if (anotherPortIsOpen && !currentPortIsOpen) await focus.close();
+        focus._port && focus._port.isOpen && focus._port.path === port.comName;
+
+        if (anotherPortIsOpen) {
+            openPortPath = focus._port.path;
+            openPortDevice = focus.device;
+            focus.close();
+        } 
+        if (anotherPortIsOpen || !currentPortIsOpen)
+            await focus.open(port.comName, device);
+        type = await focus.getKeyboardType();
+        if (anotherPortIsOpen || !currentPortIsOpen) await focus.close();
         if (anotherPortIsOpen) focus.open(openPortPath, openPortDevice);
-     
-        return typeKeyboard.trim();
+
+        return type.trim();
       }
      
       async find(...devices) {
@@ -66,10 +73,8 @@ class Focus {
               parseInt("0x" + port.productId) == device.usb.productId &&
               parseInt("0x" + port.vendorId) == device.usb.vendorId
             ) {
-              if (device.info.product === "Raise") {
-                keyboardType = keyboardType
-                  ? keyboardType
-                  : await this.getCurrentkeyboardType(this, device, port);
+              if (device.info.product === "Raise" && !keyboardType) {
+                keyboardType = await this.getCurrentKeyboardType(this, device, port);
               }
      
               if (
